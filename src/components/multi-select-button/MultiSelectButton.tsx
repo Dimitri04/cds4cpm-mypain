@@ -31,14 +31,20 @@ export default class MultiSelectButtonComponent extends React.Component<
         questionnaireItem.text =
           questionnaireItem.prefix + ": " + questionnaireItem.text;
       }
-      collectAnswer(questionnaireItem, event.target.value);
+
       for (let child of activeChoiceButton.current.children) {
         if (child.value === event.target.value) {
-          child.classList.add("selected");
-        } else {
-          child.classList.remove("selected");
+          child.classList.toggle("selected");
         }
       }
+
+      var selectedAnswers = [...activeChoiceButton.current.children]
+        .filter((answer: any) => answer.classList.contains("selected"))
+        .map((answerValue) => {
+          return JSON.parse(answerValue.value);
+        });
+
+      collectAnswer(questionnaireItem, selectedAnswers);
     };
 
     const receiveTextAnswer = (text: string) => {
@@ -52,8 +58,8 @@ export default class MultiSelectButtonComponent extends React.Component<
       }
     };
 
-    const collectAnswer = (QuestionnaireItem: any, answer: string) => {
-      this.props.parentCallback(QuestionnaireItem, answer);
+    const collectAnswer = (QuestionnaireItem: any, answer: any[]) => {
+      this.props.parentCallback(QuestionnaireItem, JSON.stringify(answer));
     };
 
     return (

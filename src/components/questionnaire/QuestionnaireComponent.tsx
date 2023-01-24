@@ -77,10 +77,10 @@ export default class QuestionnaireComponent extends React.Component<
               </Button>
               <div>
                 <h4>Review and Submit</h4>
-                <ReviewPageComponent
+                {/* <ReviewPageComponent
                   goEdit={this.props.onEdit}
                   {...this.props.questionnaireResponse}
-                ></ReviewPageComponent>
+                ></ReviewPageComponent> */}
               </div>
 
               <div className="submit-confirmation-text">

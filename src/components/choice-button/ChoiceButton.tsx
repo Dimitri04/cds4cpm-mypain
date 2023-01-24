@@ -1,6 +1,7 @@
 import React, { createRef } from "react";
 import "./ChoiceButton.css";
 import parser from "html-react-parser";
+import { QuestionnaireItem } from "../../fhir-types/fhir-r4";
 
 // push/receive STATE on parent component
 
@@ -15,7 +16,7 @@ export default class ChoiceButton extends React.Component<any, any> {
 
   public render(): JSX.Element {
     let activeChoiceButton: any = createRef();
-    let questionnaireItem = {
+    let questionnaireItem: QuestionnaireItem = {
       linkId: this.props.linkId,
       type: this.props.type,
       prefix: this.props.prefix,
