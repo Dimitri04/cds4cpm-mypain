@@ -33,7 +33,13 @@ export default class MultiSelectButtonComponent extends React.Component<
       }
 
       for (let child of activeChoiceButton.current.children) {
-        if (child.value === event.target.value) {
+        if (this.props.type === "open-choice") {
+          if (child.value === event.target.value) {
+            child.classList.add("selected");
+          } else {
+            child.classList.remove("selected");
+          }
+        } else if (child.value === event.target.value) {
           child.classList.toggle("selected");
         }
       }
@@ -47,6 +53,8 @@ export default class MultiSelectButtonComponent extends React.Component<
       collectAnswer(questionnaireItem, selectedAnswers);
     };
 
+    // myFunc<T> () {}
+
     const receiveTextAnswer = (text: string) => {
       if (text.length > 0) {
         questionnaireItem.text =
@@ -56,6 +64,16 @@ export default class MultiSelectButtonComponent extends React.Component<
           JSON.stringify({ valueString: text })
         );
       }
+    };
+
+    const receiveBooleanAnswer = (boolAns: boolean) => {
+      console.log(boolAns);
+      questionnaireItem.text =
+        questionnaireItem.prefix + ": " + questionnaireItem.text;
+      this.props.parentCallback(
+        questionnaireItem,
+        JSON.stringify({ valueBoolean: boolAns })
+      );
     };
 
     const collectAnswer = (QuestionnaireItem: any, answer: any[]) => {
@@ -165,12 +183,12 @@ export default class MultiSelectButtonComponent extends React.Component<
                     </>
                   ) : (
                     <div>
-                      {this.props.type === "choice" ? (
+                      {this.props.type === "open-choice" ? (
                         <>
                           <p className="follow-up-question">
                             {questionnaireItem.text}
                           </p>
-                          <div className="button-box">
+                          <div className="button-box mt-3">
                             <div className="btn-group" ref={activeChoiceButton}>
                               {this.props.answerOption?.map(
                                 (answerOption: any) => {
@@ -223,7 +241,10 @@ export default class MultiSelectButtonComponent extends React.Component<
                   className="form-check-input"
                   type="checkbox"
                   value={questionnaireItem.prefix}
-                  id="flexCheckDefault"
+                  id="answerCheckbox"
+                  onChange={(event) =>
+                    receiveBooleanAnswer(event.target.checked)
+                  }
                 />
                 <label className="form-check-label">
                   {questionnaireItem.prefix}

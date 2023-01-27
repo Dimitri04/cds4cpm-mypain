@@ -58,6 +58,7 @@ export default class QuestionnaireComponent extends React.Component<
                 QuestionnaireItem={item}
                 key={key}
                 onChange={this.props.onChange}
+                submitAnswers={this.props.submitAnswers}
               />
             );
           }

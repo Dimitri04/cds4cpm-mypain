@@ -1,0 +1,9 @@
+.confirmation-page a:link, .confirmation-page a:visited {
+    color: var(--color-light-green);
+    font-weight: bold;
+
+  }
+  
+  .confirmation-page a:hover, .confirmation-page a:active {
+    color: var(--color-dark-green);
+  }

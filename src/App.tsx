@@ -316,15 +316,16 @@ export default class App extends React.Component<AppProps, AppState> {
                     questionnaireResponse={this.state.QuestionnaireResponse}
                     onEdit={this.goToEditQuestionnaire}
                     onChange={this.handleChange}
-                    onSubmit={(event: any) => {
-                      this.handleOpenModal();
-                    }}
+                    submitAnswers={this.submitAnswers}
+                    // onSubmit={(event: any) => {
+                    //   this.handleOpenModal();
+                    // }}
                   />
-                  <InfoModal
+                  {/* <InfoModal
                     ref={this.handleModal}
                     show={this.state.showModal}
                     onSubmit={this.submitAnswers}
-                  ></InfoModal>
+                  ></InfoModal> */}
                 </div>
               )}
             </div>

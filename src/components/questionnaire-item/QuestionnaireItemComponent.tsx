@@ -69,6 +69,10 @@ export default class QuestionnaireItemComponent extends React.Component<
       });
     }
   }
+  confirm = () => {
+    console.log("props:", this.props);
+    this.props.onSubmit();
+  };
 
   public render(): JSX.Element {
     let text = "";
@@ -138,7 +142,7 @@ export default class QuestionnaireItemComponent extends React.Component<
                     ])
                   }
                 />
-                <label htmlFor={this.props.QuestionnaireItem.linkId}> No</label>
+                <label htmlFor={this.props.QuestionnaireItem.linkId}>No</label>
               </div>
             </div>
           ) : this.props.QuestionnaireItem.type === "choice" ? (
@@ -210,17 +214,29 @@ export default class QuestionnaireItemComponent extends React.Component<
             </button>
           )}
 
-          <button
-            className="btn btn-primary-custom ms-auto"
-            style={{ width: "50%" }}
-            type="button"
-            value={this.props.QuestionnaireItem.linkId}
-            onClick={(event: any) =>
-              this.handleNextQuestionScroll(event.target.value)
-            }
-          >
-            Next
-          </button>
+          {this.props.QuestionnaireItem.linkId !== "12" ? (
+            <button
+              className="btn btn-primary-custom ms-auto"
+              style={{ width: "50%" }}
+              type="button"
+              value={this.props.QuestionnaireItem.linkId}
+              onClick={(event: any) =>
+                this.handleNextQuestionScroll(event.target.value)
+              }
+            >
+              Next
+            </button>
+          ) : (
+            <button
+              className="btn btn-primary-custom ms-auto"
+              style={{ width: "50%" }}
+              type="button"
+              value={this.props.QuestionnaireItem.linkId}
+              onClick={() => this.props.submitAnswers()}
+            >
+              Submit
+            </button>
+          )}
         </div>
       </div>
     );
