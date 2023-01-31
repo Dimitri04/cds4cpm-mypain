@@ -6,8 +6,15 @@ import { QuestionnaireResponseItem } from "../../fhir-types/fhir-r4";
 import moment from "moment";
 
 export default class ReviewPageComponent extends React.Component<any, any> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      response: JSON.parse(localStorage.getItem("userResponse") || "{}"),
+    };
+  }
+
   public render(): JSX.Element {
-    let sortedList = this.props.item.sort((a: any, b: any) =>
+    let sortedList = this.state.response.sort((a: any, b: any) =>
       Number(a.linkId) > Number(b.linkId) ? 1 : -1
     );
     return (
@@ -32,7 +39,7 @@ export default class ReviewPageComponent extends React.Component<any, any> {
                     })}
                   </h6>
                   {/* <p className="text-response-answer">Answer: {question.answer[0].valueString || question.answer[0].valueDateTime}</p> */}
-                  <Table responsive bordered striped size="sm">
+                  <Table responsive striped size="sm">
                     <thead>
                       <tr>
                         <th>Answer</th>
@@ -59,19 +66,36 @@ export default class ReviewPageComponent extends React.Component<any, any> {
                 className="question-response-container"
                 key={question.linkId}
               >
-                <h6>{parser(text)}</h6>
+                {/* <h6>{parser(text)}</h6> */}
                 {
-                  <Table responsive bordered striped size="sm">
-                    <thead>
+                  <Table responsive striped size="sm">
+                    <thead className="table-light">
                       <tr>
-                        <th>Question</th>
+                        <th style={{ width: "350px" }}>Question</th>
                         <th>Answer</th>
-                        {/* <th><Button type="button" onClick={this.props.goEdit()}>Edit Response</Button> </th> */}
                       </tr>
                     </thead>
                     <tbody>
                       {question.item?.map((item: QuestionnaireResponseItem) => {
                         if (item.answer!.length > 0) {
+                          const multiChoiceAnswer = Object.values(
+                            item.answer![0]
+                          )
+                            .map((answer) => {
+                              if (answer.valueCoding) {
+                                return answer.valueCoding?.display;
+                              }
+                            })
+                            .join(", ");
+
+                          if (multiChoiceAnswer) {
+                            return (
+                              <tr key={item.linkId}>
+                                <td>{parser(JSON.stringify(item.text))}</td>
+                                <td>{multiChoiceAnswer}</td>
+                              </tr>
+                            );
+                          }
                           if (item.answer![0].valueCoding) {
                             return (
                               <tr key={item.linkId}>
@@ -80,7 +104,17 @@ export default class ReviewPageComponent extends React.Component<any, any> {
                               </tr>
                             );
                           }
-                          if (item.answer![0].valueString!.length > 0) {
+                          if (item.answer![0].valueBoolean) {
+                            return (
+                              <tr key={item.linkId}>
+                                <td>{parser(JSON.stringify(item.text))}</td>
+                                <td>
+                                  {item.answer![0].valueBoolean.toString()}
+                                </td>
+                              </tr>
+                            );
+                          }
+                          if (item.answer![0].valueString) {
                             return (
                               <tr key={item.linkId}>
                                 <td>{parser(JSON.stringify(item.text))}</td>

@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import App from './App';
 import { ConfirmationPage } from './components/confirmation-page/ConfirmationPage'
 import { PainResourcePage }from './components/pain-resource-page/PainResourcePage'
+import PainResponseComponent from './components/pain-response/PainResponseComponent'
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ErrorPage } from './components/error-page/ErrorPage';
@@ -16,6 +17,7 @@ ReactDOM.render(
                 <Route exact path="/" component={App} />
                 <Route exact path="/confirmation" component={ConfirmationPage} />
                 <Route exact path="/pain-resource" component={PainResourcePage} />
+                <Route exact path="/pain-response" component={PainResponseComponent} />
                 <Route exact path="/error" component={ErrorPage} />
                 <Route component={ErrorPage} />
             </Switch>

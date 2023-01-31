@@ -32,7 +32,7 @@ export default class Patient extends React.Component<
               onClick={() => this.props.startQuestionnaire()}
             >
               <div className="card-body d-flex flex-column text-center">
-                <p className="fw-bold text-light px-2">
+                <p className="fw-bold text-light px-3">
                   Yes, I want to discuss pain at my next visit.
                 </p>
                 <p className="mb-0 text-light">CONTINUE TO SURVEY</p>
@@ -48,7 +48,7 @@ export default class Patient extends React.Component<
           <div className="col-8">
             <div className="card position-relative rounded">
               <div className="card-body d-flex flex-column text-center">
-                <p className="fw-bold px-2">
+                <p className="fw-bold px-3">
                   No, my visit is about something else.
                 </p>
                 <p className="mb-0">EXIT SURVEY</p>

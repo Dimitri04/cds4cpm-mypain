@@ -12,7 +12,7 @@ interface PatientContainerState {
 }
 
 export default class PatientContainer extends React.Component<
-  any,
+  PatientContainerProps,
   PatientContainerState
 > {
   constructor(props: PatientContainerProps) {
