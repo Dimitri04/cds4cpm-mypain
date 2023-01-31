@@ -6,14 +6,9 @@ import {
   QuestionnaireResponseItemAnswer,
 } from "../../fhir-types/fhir-r4";
 import "./QuestionnaireItemComponent.css";
-import { Card, Button } from "react-bootstrap";
 import MultiSelectButtonComponent from "../multi-select-button/MultiSelectButton";
-import { faArrowAltCircleLeft } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ChoiceButton from "../choice-button/ChoiceButton";
 import parser from "html-react-parser";
-import YouTube from "react-youtube";
-import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
 interface QuestionnaireItemState {
@@ -69,10 +64,10 @@ export default class QuestionnaireItemComponent extends React.Component<
       });
     }
   }
-  confirm = () => {
-    console.log("props:", this.props);
-    this.props.onSubmit();
-  };
+  // confirm = () => {
+  //   console.log("props:", this.props);
+  //   this.props.onSubmit();
+  // };
 
   public render(): JSX.Element {
     let text = "";
@@ -87,6 +82,7 @@ export default class QuestionnaireItemComponent extends React.Component<
       answer: any
     ) => {
       let responseAnswer: QuestionnaireResponseItemAnswer = JSON.parse(answer);
+      console.log(responseAnswer);
       let childResponse: QuestionnaireResponseItem = {
         linkId: questionItem.linkId,
         text: questionItem.text,
@@ -198,7 +194,7 @@ export default class QuestionnaireItemComponent extends React.Component<
             : null}
         </div>
 
-        <div className="d-grid gap-2 col-12 d-flex mt-3">
+        <div className="d-grid gap-2 d-flex mt-3">
           {this.props.QuestionnaireItem.linkId === "1" ? (
             ""
           ) : (

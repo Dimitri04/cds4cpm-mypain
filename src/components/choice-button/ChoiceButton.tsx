@@ -48,13 +48,12 @@ export default class ChoiceButton extends React.Component<any, any> {
         <div className="card-body">
           <p>{parser(questionnaireItem.text)}</p>
           <div className="choice-button-group mt-3">
-            <div ref={activeChoiceButton} className=" btn-group d-flex">
+            <div ref={activeChoiceButton} className="btn-group d-flex">
               {questionnaireItem.answerOption?.map((answerOption: any) => {
                 return (
                   <button
                     key={JSON.stringify(answerOption)}
-                    aria-required="true"
-                    className="btn-sm btn btn-outline-secondary-custom"
+                    className="btn-sm btn btn-outline-secondary-custom "
                     value={JSON.stringify(answerOption)}
                     onClick={(event: any) => handleClick(event)}
                   >

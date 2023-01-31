@@ -1,6 +1,5 @@
 import React, { createRef } from "react";
 import "./MultiSelectButton.css";
-import { ButtonGroup, Button } from "react-bootstrap";
 import { QuestionnaireItem } from "../../fhir-types/fhir-r4";
 import parser from "html-react-parser";
 
@@ -55,29 +54,46 @@ export default class MultiSelectButtonComponent extends React.Component<
 
     // myFunc<T> () {}
 
-    const receiveTextAnswer = (text: string) => {
-      if (text.length > 0) {
-        questionnaireItem.text =
-          questionnaireItem.prefix + ": " + questionnaireItem.text;
-        this.props.parentCallback(
-          questionnaireItem,
-          JSON.stringify({ valueString: text })
-        );
-      }
-    };
+    // const receiveTextAnswer = (text: string) => {
+    //   if (text.length > 0) {
+    //     // questionnaireItem.text =
+    //     //   questionnaireItem.prefix + ": " + questionnaireItem.text;
+    //     this.props.parentCallback(
+    //       questionnaireItem,
+    //       JSON.stringify({ valueString: text })
+    //     );
+    //   }
+    // };
 
-    const receiveBooleanAnswer = (boolAns: boolean) => {
-      console.log(boolAns);
-      questionnaireItem.text =
-        questionnaireItem.prefix + ": " + questionnaireItem.text;
-      this.props.parentCallback(
-        questionnaireItem,
-        JSON.stringify({ valueBoolean: boolAns })
-      );
-    };
+    // const receiveBooleanAnswer = (boolAns: boolean) => {
+    //   // questionnaireItem.text =
+    //   //   questionnaireItem.prefix + ": " + questionnaireItem.text;
+    //   this.props.parentCallback(
+    //     questionnaireItem,
+    //     JSON.stringify({ valueBoolean: boolAns })
+    //   );
+    // };
 
     const collectAnswer = (QuestionnaireItem: any, answer: any[]) => {
       this.props.parentCallback(QuestionnaireItem, JSON.stringify(answer));
+    };
+
+    const collectResp = <T extends string | boolean>(arg: T): T => {
+      if (typeof arg === "string") {
+        this.props.parentCallback(
+          questionnaireItem,
+          JSON.stringify({ valueString: arg })
+        );
+      } else if (typeof arg === "boolean") {
+        console.log("Input is a boolean");
+        this.props.parentCallback(
+          questionnaireItem,
+          JSON.stringify({ valueBoolean: arg })
+        );
+      } else {
+        console.log("Input is not a valid type");
+      }
+      return arg;
     };
 
     return (
@@ -175,7 +191,8 @@ export default class MultiSelectButtonComponent extends React.Component<
                             placeholder="Type here..."
                             className="form-control"
                             onChange={(event) =>
-                              receiveTextAnswer(event.target.value)
+                              // receiveTextAnswer(event.target.value)
+                              collectResp<string>(event.target.value)
                             }
                           />
                         </div>
@@ -196,7 +213,6 @@ export default class MultiSelectButtonComponent extends React.Component<
                                     <button
                                       className="btn-sm btn btn-outline-secondary-custom"
                                       key={JSON.stringify(answerOption)}
-                                      aria-required="true"
                                       value={JSON.stringify(answerOption)}
                                       onClick={(event: any) =>
                                         handleClick(event)
@@ -218,7 +234,8 @@ export default class MultiSelectButtonComponent extends React.Component<
                               placeholder="Type here..."
                               className="form-control"
                               onChange={(event) =>
-                                receiveTextAnswer(event.target.value)
+                                // receiveTextAnswer(event.target.value)
+                                collectResp<string>(event.target.value)
                               }
                             />
                           </div>
@@ -242,8 +259,9 @@ export default class MultiSelectButtonComponent extends React.Component<
                   type="checkbox"
                   value={questionnaireItem.prefix}
                   id="answerCheckbox"
-                  onChange={(event) =>
-                    receiveBooleanAnswer(event.target.checked)
+                  onChange={
+                    (event) => collectResp<boolean>(event.target.checked)
+                    // receiveBooleanAnswer(event.target.checked)
                   }
                 />
                 <label className="form-check-label">

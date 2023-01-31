@@ -1,9 +1,11 @@
-import React, { createRef } from "react";
+import React from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import QuestionnaireComponent from "./components/questionnaire/QuestionnaireComponent";
 import {
   Questionnaire,
+  QuestionnaireItem,
+  QuestionnaireItemAnswerOption,
   QuestionnaireResponse,
   QuestionnaireResponseItem,
   QuestionnaireResponseItemAnswer,
@@ -17,8 +19,6 @@ import PatientContainer from "./components/patient/PatientContainer";
 import FHIR from "fhirclient";
 import Client from "fhirclient/lib/Client";
 import { fhirclient } from "fhirclient/lib/types";
-import { Button } from "react-bootstrap";
-import { InfoModal } from "./components/info-modal/InfoModal";
 import { Redirect } from "react-router-dom";
 import pkg from "../package.json";
 
@@ -33,12 +33,13 @@ interface AppState {
   SelectedQuestionnaire?: Questionnaire;
   QuestionnaireResponse: QuestionnaireResponse;
   ServerUrl: [];
+  response?: any;
 }
 
 export default class App extends React.Component<AppProps, AppState> {
   appVersion = pkg.version;
-  questionnaireContainer: any = createRef();
-  handleModal: any = createRef();
+  questionnaireContainer = React.createRef();
+  handleModal = React.createRef();
   ptRef: string | undefined;
   ptDisplay: string | undefined;
 
@@ -57,6 +58,7 @@ export default class App extends React.Component<AppProps, AppState> {
         item: [],
       },
       ServerUrl: [],
+      response: JSON.parse(localStorage.getItem("userResponse") || "{}"),
     };
     this.handleChange = this.handleChange.bind(this);
     this.submitAnswers = this.submitAnswers.bind(this);
@@ -64,10 +66,14 @@ export default class App extends React.Component<AppProps, AppState> {
   }
 
   componentDidMount() {
+    // Clears user responses from local storage
+    localStorage.removeItem("userResponse");
+
+    // Gets the questionnaire from the server
     getQuestionnaire(this.state.ServerUrl)
       .then((questionnaire) => {
-        const processQuestionnaire = (p: any) => {
-          return p as Questionnaire;
+        const processQuestionnaire = (p: Questionnaire) => {
+          return p;
         };
         let updatedQuestionnaire = processQuestionnaire(questionnaire);
 
@@ -104,18 +110,21 @@ export default class App extends React.Component<AppProps, AppState> {
       });
   }
 
+  // Selects the questionnaire
   selectQuestionnaire(
     selectedQuestionnaire: Questionnaire,
     ptRef: string,
     ptDisplay: string
   ): void {
+    // Sort questionnaire answer option alphabetically (Pain Locations)
     let sortedAnswerOptions = { ...selectedQuestionnaire.item };
-    sortedAnswerOptions[0].item?.map((question: any) => {
-      return question.answerOption?.sort((a: any, b: any) =>
-        a.valueCoding.display.toLowerCase() >
-        b.valueCoding.display.toLowerCase()
-          ? 1
-          : -1
+    sortedAnswerOptions[0].item?.map((question: QuestionnaireItem) => {
+      return question.answerOption?.sort(
+        (a: QuestionnaireItemAnswerOption, b: QuestionnaireItemAnswerOption) =>
+          a.valueCoding!.display!.toLowerCase() >
+          b.valueCoding!.display!.toLowerCase()
+            ? 1
+            : -1
       );
     });
     this.setState({
@@ -210,26 +219,6 @@ export default class App extends React.Component<AppProps, AppState> {
     });
   };
 
-  // preparing to be able to go directly to the question to edit the response
-  // this will go in the onEdit property of QuestionnaireComponent
-  goToEditQuestionnaire = () => {
-    this.setState({ Status: "in-progress" }, () => {
-      if (this.questionnaireContainer.current) {
-        this.questionnaireContainer.current.firstElementChild.children[
-          this.state.SelectedQuestionnaire?.item?.length || 0
-        ].classList.add("active");
-        this.questionnaireContainer.current.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-        });
-      }
-    });
-  };
-
-  handleOpenModal = () => {
-    this.handleModal.current.handleShow();
-  };
-
   submitAnswers(): void {
     this.setState(
       (state) => {
@@ -244,6 +233,10 @@ export default class App extends React.Component<AppProps, AppState> {
         return {
           QuestionnaireResponse,
           busy: true,
+          response: window.localStorage.setItem(
+            "userResponse",
+            JSON.stringify(QuestionnaireResponse.item)
+          ),
         };
       },
       () => {
@@ -262,10 +255,6 @@ export default class App extends React.Component<AppProps, AppState> {
           });
       }
     );
-  }
-
-  setTheme(color: string) {
-    document.documentElement.style.setProperty("--color-dark-gray", color);
   }
 
   public render(): JSX.Element {
@@ -289,9 +278,9 @@ export default class App extends React.Component<AppProps, AppState> {
     }
     if (this.state.SelectedQuestionnaire) {
       return (
-        <div className="app container px-0 px-md-3">
+        <div className="app container">
           <div className="row justify-content-center">
-            <div className="col-12 col-md-8 col-lg-5">
+            <div className="col-12 col-md-8 col-lg-5 p-0">
               <header className="app-header">
                 <img
                   className="mypain-header-logo"
@@ -314,18 +303,9 @@ export default class App extends React.Component<AppProps, AppState> {
                   <QuestionnaireComponent
                     questionnaire={this.state.SelectedQuestionnaire}
                     questionnaireResponse={this.state.QuestionnaireResponse}
-                    onEdit={this.goToEditQuestionnaire}
                     onChange={this.handleChange}
                     submitAnswers={this.submitAnswers}
-                    // onSubmit={(event: any) => {
-                    //   this.handleOpenModal();
-                    // }}
                   />
-                  {/* <InfoModal
-                    ref={this.handleModal}
-                    show={this.state.showModal}
-                    onSubmit={this.submitAnswers}
-                  ></InfoModal> */}
                 </div>
               )}
             </div>

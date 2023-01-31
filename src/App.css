@@ -3,6 +3,7 @@ html {
     --color-light-green: #52b997;
     --color-dark-gray: #5d666d;
     --color-light-gray:#8d9398;
+    
 }
 
 h1, h2, h3 {
@@ -10,7 +11,6 @@ h1, h2, h3 {
 }
 
 .app-logo {
-    /* height: 40vmin; */
     pointer-events: none;
 }
 
@@ -21,29 +21,7 @@ h1, h2, h3 {
     height: 100%;
 }
 
-.continue-button {
-    /* background-color: rgba(var(--color-dark), .10) !important;
-    border-color: var(--color-dark) !important;
-    font-size: calc(4px + 2vmin);
-    color: rgba(var(--color-dark), 1) !important;
-    margin-bottom: 20px; */
-}
 
-.options {
-    /* display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; */
-}
-
-.app .options, .app .options button {
-    /* margin: 5px; */
-}
-
-.response-container {
-    /* max-width: 100%;
-    word-break: break-all; */
-}
 
 .hidden {
     display: none;
